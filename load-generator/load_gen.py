@@ -71,7 +71,7 @@ async def inventory_item(client: httpx.AsyncClient):
 async def reindex(client: httpx.AsyncClient):
     """Trigger CPU spike on inventory service."""
     try:
-        await client.post(f"{GATEWAY_URL.replace('8000', '8002')}/reindex", timeout=10.0)
+        await client.post(f"{GATEWAY_URL}/reindex", timeout=10.0)
         logger.info("Reindex triggered")
     except Exception:
         pass

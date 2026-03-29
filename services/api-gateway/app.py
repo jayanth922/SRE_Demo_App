@@ -116,5 +116,17 @@ async def get_item(item_id: str):
         logger.error(f"Inventory lookup error item={item_id} error={e}")
         return JSONResponse(status_code=503, content={"error": "inventory service unavailable"})
 
+@app.post("/reindex")
+async def reindex():
+    logger.info("Routing reindex request to inventory-service")
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            resp = await client.post(f"{INVENTORY_URL}/reindex")
+        return JSONResponse(status_code=resp.status_code, content=resp.json())
+    except Exception as e:
+        ERROR_COUNT.labels(service="api-gateway", endpoint="/reindex", error_type="connection_error").inc()
+        logger.error(f"Reindex error: {e}")
+        return JSONResponse(status_code=503, content={"error": "inventory service unavailable"})
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

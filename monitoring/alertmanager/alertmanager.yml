@@ -23,8 +23,6 @@ route:
 receivers:
   - name: sre-platform-webhook
     webhook_configs:
-      - url: "${SAAS_WEBHOOK_URL}"   # e.g. https://sre-platform.example.com/api/v1/alerts/webhook
+      - url: "http://host.docker.internal:8080/webhook/alert"
         send_resolved: true
-        http_config:
-          bearer_token: "${CLUSTER_TOKEN}"
         max_alerts: 10
